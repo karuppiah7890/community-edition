@@ -22,5 +22,6 @@ jobs:
       - name: Run E2E Tests
         shell: powershell
         run: |
-          cd hack\choco
+          cd hack\choco;
+          ls;
           .\test\e2etest.ps1
