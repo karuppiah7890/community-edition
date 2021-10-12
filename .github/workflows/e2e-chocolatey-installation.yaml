@@ -24,4 +24,4 @@ jobs:
         run: |
           cd hack\choco;
           ls;
-          .\test\e2etest.ps1
+          .\test\e2e-test.ps1
