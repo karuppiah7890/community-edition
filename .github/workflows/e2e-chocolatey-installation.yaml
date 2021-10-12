@@ -3,7 +3,7 @@ name: E2E Test - Chocolatey package installation
 on:
   push:
     branches:
-      - main
+      - chocolatey-package-e2e-trial
     paths:
       - "hack/choco/"
       - "!hack/choco/**.md"
