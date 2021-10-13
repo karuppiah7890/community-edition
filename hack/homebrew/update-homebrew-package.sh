@@ -23,10 +23,6 @@ darwin_amd64_shasum=$(grep tce-darwin-amd64-"${version}".tar.gz tce-checksums.tx
 
 linux_amd64_shasum=$(grep tce-linux-amd64-"${version}".tar.gz tce-checksums.txt | cut -d ' ' -f 1)
 
-git config --global url."https://git:${GITHUB_TOKEN}@github.com".insteadOf "https://github.com"
-git config --global user.name github-actions
-git config --global user.email github-actions@github.com
-
 # git clone https://github.com/vmware-tanzu/homebrew-tanzu
 git clone https://github.com/karuppiah7890/homebrew-tanzu
 

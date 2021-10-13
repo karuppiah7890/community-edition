@@ -9,9 +9,15 @@ jobs:
     name: Update Homebrew Package
     runs-on: ubuntu-latest
     steps:
-      - name: Update Homebrew Package
-        shell: bash
+      - name: Config credentials
         env:
           GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        run: |
+          git config --global pull.rebase true
+          git config --global url."https://git:${GITHUB_TOKEN}@github.com".insteadOf "https://github.com"
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+      - name: Update Homebrew Package
+        shell: bash
         run: |
           ./hack/homebrew/update-homebrew-package.sh ${{ github.ref }}
