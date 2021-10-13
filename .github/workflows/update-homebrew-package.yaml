@@ -1,0 +1,15 @@
+name: Update Homebrew Package
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  update-homebrew-package:
+    name: Update Homebrew Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Homebrew Package
+        shell: bash
+        run: |
+          echo "okay" ${{ github.ref }}
