@@ -8,23 +8,44 @@ set -o nounset
 set -o pipefail
 set -o xtrace
 
-GITHUB_REF="${1:?GitHub Reference argument empty. Example usage: ./hack/homebrew/update-homebrew-package.sh refs/tags/v0.10.0}"
-: ${GITHUB_TOKEN:?GITHUB_TOKEN is not set}
-
-version=${GITHUB_REF/refs\/tags\//}
+version="${1:?TCE version argument empty. Example usage: ./hack/homebrew/update-homebrew-package.sh v0.10.0}"
+: "${GITHUB_TOKEN:?GITHUB_TOKEN is not set}"
 
 temp_dir=$(mktemp -d)
 
 pushd "${temp_dir}"
 
-wget https://github.com/karuppiah7890/community-edition/releases/download/"${version}"/tce-checksums.txt
+TCE_REPO_RELEASES_URL="https://github.com/karuppiah7890/community-edition/releases"
+TCE_DARWIN_TAR_BALL_FILE="tce-darwin-amd64-${version}.tar.gz"
+TCE_LINUX_TAR_BALL_FILE="tce-linux-amd64-${version}.tar.gz"
+TCE_CHECKSUMS_FILE="tce-checksums.txt"
+TCE_HOMEBREW_TAP_REPO="https://github.com/karuppiah7890/homebrew-tanzu"
 
-darwin_amd64_shasum=$(grep tce-darwin-amd64-"${version}".tar.gz tce-checksums.txt | cut -d ' ' -f 1)
+echo "Checking if the necessary files exist for the TCE ${version} release"
 
-linux_amd64_shasum=$(grep tce-linux-amd64-"${version}".tar.gz tce-checksums.txt | cut -d ' ' -f 1)
+curl -f -I -L \
+    "${TCE_REPO_RELEASES_URL}/download/${version}/${TCE_DARWIN_TAR_BALL_FILE}" > /dev/null || {
+        echo "${TCE_DARWIN_TAR_BALL_FILE} is not accessible in TCE ${version} release"
+        exit 1
+    }
+
+curl -f -I -L \
+    "${TCE_REPO_RELEASES_URL}/download/${version}/${TCE_LINUX_TAR_BALL_FILE}" > /dev/null || {
+        echo "${TCE_LINUX_TAR_BALL_FILE} is not accessible in TCE ${version} release"
+        exit 1
+    }
+
+wget "${TCE_REPO_RELEASES_URL}/download/${version}/${TCE_CHECKSUMS_FILE}" || {
+    echo "${TCE_CHECKSUMS_FILE} is not accessible in TCE ${version} release"
+    exit 1
+}
+
+darwin_amd64_shasum=$(grep "${TCE_DARWIN_TAR_BALL_FILE}" ${TCE_CHECKSUMS_FILE} | cut -d ' ' -f 1)
+
+linux_amd64_shasum=$(grep "${TCE_LINUX_TAR_BALL_FILE}" ${TCE_CHECKSUMS_FILE} | cut -d ' ' -f 1)
 
 # git clone https://github.com/vmware-tanzu/homebrew-tanzu
-git clone https://github.com/karuppiah7890/homebrew-tanzu
+git clone ${TCE_HOMEBREW_TAP_REPO}
 
 cd homebrew-tanzu
 
@@ -56,8 +77,8 @@ git commit -m "auto-generated - update tce homebrew formula for version ${versio
 
 git push origin "${PR_BRANCH}"
 
-gh pr create --repo karuppiah7890/homebrew-tanzu --title "auto-generated - update tce homebrew formula for version ${version}" --body "auto-generated - update tce homebrew formula for version ${version}"
+gh pr create --repo ${TCE_HOMEBREW_TAP_REPO} --title "auto-generated - update tce homebrew formula for version ${version}" --body "auto-generated - update tce homebrew formula for version ${version}"
 
-gh pr merge --repo karuppiah7890/homebrew-tanzu "${PR_BRANCH}" --squash --delete-branch
+gh pr merge --repo ${TCE_HOMEBREW_TAP_REPO} "${PR_BRANCH}" --squash --delete-branch
 
 popd

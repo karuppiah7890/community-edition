@@ -2,7 +2,8 @@ name: Update Homebrew Package
 
 on:
   release:
-    types: [released]
+    types:
+      - released
 
 jobs:
   update-homebrew-package:
@@ -26,4 +27,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
         shell: bash
         run: |
-          ./hack/homebrew/update-homebrew-package.sh ${{ github.ref }}
+          GITHUB_REF="${{ github.ref }}"
+          version=${GITHUB_REF/refs\/tags\//}
+          ./hack/homebrew/update-homebrew-package.sh ${version}
