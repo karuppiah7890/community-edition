@@ -11,5 +11,7 @@ jobs:
     steps:
       - name: Update Homebrew Package
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
         run: |
-          echo "okay" ${{ github.ref }}
+          ./hack/homebrew/update-homebrew-package.sh ${{ github.ref }}
