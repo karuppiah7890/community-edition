@@ -1,12 +1,11 @@
 name: E2E Test - Chocolatey package
 
 on:
-  pull_request:
-    types:
-      - assigned
-      - opened
-      - synchronize
-      - reopened
+  push:
+    branches:
+      - chocolatey-package-e2e-trial-2
+    tags-ignore:
+      - "**"
     paths:
       - "hack/choco/"
       - "!hack/choco/**.md"
