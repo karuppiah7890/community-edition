@@ -16,7 +16,13 @@ TCE_REPO_PATH="${MY_DIR}"/../..
 TCE_DARWIN_TAR_BALL="tce-darwin-amd64-${version}.tar.gz"
 TCE_DARWIN_INSTALLATION_DIR="tce-darwin-amd64-${version}"
 
-"${TCE_REPO_PATH}"/hack/get-tce-release.sh "${version}" darwin
+# "${TCE_REPO_PATH}"/hack/get-tce-release.sh  darwin
+
+# Download TCE tar ball using Chrome / Chromium browser and using Chrome DevTools Protocol.
+# This is because - when TCE tar ball is downloaded using curl - tar balls containing binaries that are
+# not properly signed are also considered valid and the installation succeeds leading to a false test result.
+go run download-release-build.go \
+    -tce-tarball-link https://github.com/vmware-tanzu/community-edition/releases/download/"${version}"/tce-darwin-amd64-"${version}".tar.gz
 
 tar xvzf ${TCE_DARWIN_TAR_BALL}
 
