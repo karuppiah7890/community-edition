@@ -41,6 +41,8 @@ trap '{ kill $applescript_pid ; }' EXIT
 
 "${TCE_DARWIN_INSTALLATION_DIR}"/install.sh
 
+tanzu version
+
 tanzu cluster version
 
 tanzu conformance version
