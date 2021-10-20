@@ -28,11 +28,16 @@ pushd "${TCE_REPO_PATH}"/test/release-build-test
 
 go run download-release-build.go \
     -tce-tarball-link https://github.com/karuppiah7890/community-edition/releases/download/"${version}"/tce-darwin-amd64-"${version}".tar.gz \
-    -tce-tarball-path ${TCE_DARWIN_TAR_BALL}
+    -tce-tarball-path "${TCE_DARWIN_TAR_BALL}"
 
 popd
 
-tar xvzf ${TCE_DARWIN_TAR_BALL}
+tar xvzf "${TCE_DARWIN_TAR_BALL}"
+
+osascript "${TCE_REPO_PATH}"/test/release-build-test/close-security-issue-popups.applescript &
+applescript_pid=$!
+
+trap '{ kill $applescript_pid ; }' EXIT
 
 "${TCE_DARWIN_INSTALLATION_DIR}"/install.sh
 
