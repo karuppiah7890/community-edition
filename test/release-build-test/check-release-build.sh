@@ -34,7 +34,7 @@ popd
 
 tar xvzf ${TCE_DARWIN_TAR_BALL}
 
-./"${TCE_DARWIN_INSTALLATION_DIR}"/install.sh
+"${TCE_DARWIN_INSTALLATION_DIR}"/install.sh
 
 tanzu cluster version
 
