@@ -13,8 +13,8 @@ version="${1:?TCE version argument empty. Example usage: ./test/release-build-te
 MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TCE_REPO_PATH="${MY_DIR}"/../..
 
-TCE_DARWIN_TAR_BALL="tce-darwin-amd64-${version}.tar.gz"
-TCE_DARWIN_INSTALLATION_DIR="tce-darwin-amd64-${version}"
+TCE_DARWIN_TAR_BALL="${TCE_REPO_PATH}/tce-darwin-amd64-${version}.tar.gz"
+TCE_DARWIN_INSTALLATION_DIR="${TCE_REPO_PATH}/tce-darwin-amd64-${version}"
 
 # "${TCE_REPO_PATH}"/hack/get-tce-release.sh  darwin
 
@@ -23,8 +23,14 @@ TCE_DARWIN_INSTALLATION_DIR="tce-darwin-amd64-${version}"
 # not properly signed are also considered valid and the installation succeeds leading to a false test result.
 # go run download-release-build.go \
 #     -tce-tarball-link https://github.com/vmware-tanzu/community-edition/releases/download/"${version}"/tce-darwin-amd64-"${version}".tar.gz
+
+pushd "${TCE_REPO_PATH}"/test/release-build-test
+
 go run download-release-build.go \
-    -tce-tarball-link https://github.com/karuppiah7890/community-edition/releases/download/"${version}"/tce-darwin-amd64-"${version}".tar.gz
+    -tce-tarball-link https://github.com/karuppiah7890/community-edition/releases/download/"${version}"/tce-darwin-amd64-"${version}".tar.gz \
+    -tce-tarball-path ${TCE_DARWIN_TAR_BALL}
+
+popd
 
 tar xvzf ${TCE_DARWIN_TAR_BALL}
 

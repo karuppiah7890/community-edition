@@ -16,11 +16,19 @@ import (
 func main() {
 	var tceTarBallLink string
 	const tceTarBallLinkFlag = "tce-tarball-link"
+	var tceTarBallPath string
+	const tceTarBallPathFlag = "tce-tarball-path"
 	flag.StringVar(&tceTarBallLink, tceTarBallLinkFlag, "", "The link or URL to the TCE release tar ball")
+	flag.StringVar(&tceTarBallPath, tceTarBallPathFlag, "", "The download path where the TCE release tar ball is downloaded")
 
 	flag.Parse()
 
 	if strings.TrimSpace(tceTarBallLink) == "" {
+		log.Fatalf("A TCE release tar ball link must be provided using -%s", tceTarBallLinkFlag)
+	}
+
+	if strings.TrimSpace(tceTarBallPath) == "" {
+		log.Printf("Warning: No download path has been provided using -%s . The tar ball will be downloaded to a random temporary directory path and path will be logged", tceTarBallPathFlag)
 		log.Fatalf("A TCE release tar ball link must be provided using -%s", tceTarBallLinkFlag)
 	}
 
@@ -73,7 +81,19 @@ func main() {
 	// This will block until the chromedp listener closes the channel
 	<-downloadComplete
 
+	log.Printf("Download Complete")
+
 	// We can predict the exact file location and name here because of how we configured
 	// SetDownloadBehavior and WithDownloadPath
-	log.Printf("Download Complete: %v%v", os.TempDir(), downloadGUID)
+	tempDownloadPath := fmt.Sprintf("%v%v", os.TempDir(), downloadGUID)
+
+	if strings.TrimSpace(tceTarBallPath) == "" {
+		log.Printf("Download Path: %v", tempDownloadPath)
+	} else {
+		err := os.Rename(tempDownloadPath, tceTarBallPath)
+		if err != nil {
+			log.Printf("Error: An error occurred while storing the TCE tar ball in the provided download path %v", tceTarBallPath)
+			log.Fatal(err)
+		}
+	}
 }
