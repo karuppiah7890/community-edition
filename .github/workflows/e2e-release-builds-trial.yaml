@@ -1,4 +1,4 @@
-name: E2E Test - Release Builds
+name: E2E Test - Release Builds - Trial
 
 on:
   release:
