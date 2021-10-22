@@ -37,7 +37,9 @@ TCE_INSTALLATION_DIR="${TCE_REPO_PATH}/tce-linux-amd64-${version}"
 
 # popd
 
-curl "https://github.com/vmware-tanzu/community-edition/releases/download/${version}/tce-linux-amd64-${version}.tar.gz"
+# TODO: Change to main repo link later for PR
+# wget "https://github.com/vmware-tanzu/community-edition/releases/download/${version}/tce-linux-amd64-${version}.tar.gz"
+wget "https://github.com/karuppiah7890/community-edition/releases/download/${version}/tce-linux-amd64-${version}.tar.gz"
 
 tar xvzf "${TCE_RELEASE_TAR_BALL}"
 
