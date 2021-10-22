@@ -11,7 +11,8 @@ set -o xtrace
 version="${1:?TCE version argument empty. Example usage: ./test/release-build-test/check-release-build.sh v0.10.0}"
 
 MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-TCE_REPO_PATH="${MY_DIR}"/../..
+# There's an extra /.. here as this is inside linux directory
+TCE_REPO_PATH="${MY_DIR}"/../../..
 
 # TODO: Make the script generic and make it work for both Linux and Mac. Find OS like this -
 # BUILD_OS=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -39,9 +40,9 @@ TCE_INSTALLATION_DIR="${TCE_REPO_PATH}/tce-linux-amd64-${version}"
 
 # TODO: Change to main repo link later for PR
 # wget "https://github.com/vmware-tanzu/community-edition/releases/download/${version}/tce-linux-amd64-${version}.tar.gz"
-wget "https://github.com/karuppiah7890/community-edition/releases/download/${version}/tce-linux-amd64-${version}.tar.gz"
+wget "https://github.com/karuppiah7890/community-edition/releases/download/${version}/tce-linux-amd64-${version}.tar.gz" -P "${TCE_REPO_PATH}"
 
-tar xvzf "${TCE_RELEASE_TAR_BALL}"
+tar xvzf "${TCE_RELEASE_TAR_BALL}" --directory "${TCE_REPO_PATH}"
 
 # TODO: Make the script generic and make it work for both Linux and Mac. Only for Mac, we might have to do some
 # Mac specific stuff for signing issues
