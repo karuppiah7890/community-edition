@@ -1,0 +1,28 @@
+name: E2E Test - Linux Release Build Trial
+
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  e2e-test-release-builds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+
+      # TODO: Make the workflow config generic and make it work for both Linux and Mac and use a matrix to run
+      # both Linux and Mac tests on Linux and Mac. Only the Mac test requires Golang to use some Golang code to
+      # download TCE release tar ball using Chrome.
+      # - name: Set up Go 1.x
+      #   uses: actions/setup-go@v2
+      #   with:
+      #     go-version: "1.16"
+      #   id: go
+
+      - name: E2E Test - Linux Release Build Trial
+        run: |
+          GITHUB_REF="${{ github.ref }}"
+          version=${GITHUB_REF/refs\/tags\//}
+          ./test/release-build-test/linux/check-release-build.sh ${version}
