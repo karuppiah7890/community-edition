@@ -3,7 +3,7 @@ name: E2E Test - Release Builds Trial 2
 on:
   release:
     types:
-      - edited
+      - unpublished
 
 jobs:
   e2e-test-release-builds-trial-2:
