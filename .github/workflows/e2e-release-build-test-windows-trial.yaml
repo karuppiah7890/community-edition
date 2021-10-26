@@ -1,0 +1,21 @@
+name: E2E Test - Release Build Test for Windows - Trial
+
+on:
+  push:
+    branches:
+      - windows-release-build-test
+
+jobs:
+  e2e-release-build-test:
+    # # Only run this job if we're in the main repo, not a fork.
+    # if: github.repository == 'vmware-tanzu/community-edition'
+    name: E2E Test - Release Build Test for Windows - Trial
+    runs-on: windows-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+
+      - name: Run E2E Tests
+        shell: powershell
+        run: |
+          signtool
