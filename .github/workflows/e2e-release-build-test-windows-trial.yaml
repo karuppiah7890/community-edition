@@ -1,9 +1,6 @@
 name: E2E Test - Release Build Test for Windows - Trial
 
-on:
-  push:
-    branches:
-      - windows-release-build-test
+on: workflow_dispatch
 
 jobs:
   e2e-release-build-test:
