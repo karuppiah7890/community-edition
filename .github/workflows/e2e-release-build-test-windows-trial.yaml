@@ -23,7 +23,7 @@ jobs:
           $destination = 'tce-windows-amd64-v0.9.1.zip'
           Start-BitsTransfer -Source $source -Destination $destination
           Expand-Archive -LiteralPath tce-windows-amd64-v0.9.1.zip
-          Get-ChildItem -Path "tce-windows-amd64-v0.9.1\bin\tanzu-*" -File -Recurse | Foreach-Object {
+          Get-ChildItem -Path "tce-windows-amd64-v0.9.1\tce-windows-amd64-v0.9.1\bin\tanzu-*" -File -Recurse | Foreach-Object {
             & "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x64\signtool" verify /pa $_.FullName
           }
 
