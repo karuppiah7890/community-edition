@@ -19,7 +19,7 @@ jobs:
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop';
-          $source = 'https://github.com/vmware-tanzu/community-edition/releases/download/v0.51.9/tce-windows-amd64-v0.9.1.zip'
+          $source = 'https://github.com/vmware-tanzu/community-edition/releases/download/v0.9.1/tce-windows-amd64-v0.9.1.zip'
           $destination = 'tce-windows-amd64-v0.9.1.zip'
           Start-BitsTransfer -Source $source -Destination $destination
           Expand-Archive -LiteralPath tce-windows-amd64-v0.9.1.zip
