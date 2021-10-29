@@ -1,11 +1,8 @@
 name: E2E Test - Windows OS Release Builds
 
 on:
-  workflow_dispatch:
-    inputs:
-      release_version:
-        description: "Release version that has to be tested"
-        required: true
+  push:
+    branches: [release-build-test-macos-trial]
 
 jobs:
   e2e-test-macos-release-builds:
