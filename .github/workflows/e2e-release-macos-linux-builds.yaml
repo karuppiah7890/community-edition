@@ -10,8 +10,6 @@ on:
 jobs:
   e2e-test-macos-release-builds:
     name: E2E Test - MacOS and Linux OS Release Builds
-    # Only run this job if we're in the main repo, not a fork.
-    if: github.repository == 'vmware-tanzu/community-edition'
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest]
