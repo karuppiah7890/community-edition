@@ -1,0 +1,23 @@
+name: Windows Install Test - Trial
+
+on:
+  push:
+    branches:
+      - windows-release-install-test-trial
+    tags-ignore:
+      - "**"
+
+jobs:
+  e2e-release-build-test:
+    # # Only run this job if we're in the main repo, not a fork.
+    # if: github.repository == 'vmware-tanzu/community-edition'
+    name: Windows Install Test - Trial
+    runs-on: windows-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+
+      - name: Run Test
+        shell: powershell
+        run: |
+          choco install tanzu-community-edition
