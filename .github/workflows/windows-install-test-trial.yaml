@@ -21,3 +21,71 @@ jobs:
         shell: powershell
         run: |
           choco install tanzu-community-edition
+
+          $Env:Path
+
+          tanzu version
+
+          if ($LastExitCode -ne 0) {
+            throw "Error verifying tanzu CLI using version command: " + $_.FullName
+          }
+
+          tanzu cluster version
+
+          if ($LastExitCode -ne 0) {
+            throw "Error verifying tanzu cluster plugin using version command: " + $_.FullName
+          }
+
+          tanzu conformance version
+
+          if ($LastExitCode -ne 0) {
+            throw "Error verifying tanzu conformance plugin using version command: " + $_.FullName
+          }
+
+          tanzu diagnostics version
+
+          if ($LastExitCode -ne 0) {
+            throw "Error verifying tanzu diagnostics plugin using version command: " + $_.FullName
+          }
+
+          tanzu kubernetes-release version
+
+          if ($LastExitCode -ne 0) {
+            throw "Error verifying tanzu release plugin using version command: " + $_.FullName
+          }
+
+          tanzu management-cluster version
+
+          if ($LastExitCode -ne 0) {
+            throw "Error verifying tanzu cluster plugin using version command: " + $_.FullName
+          }
+
+          tanzu package version
+
+          if ($LastExitCode -ne 0) {
+            throw "Error verifying tanzu package plugin using version command: " + $_.FullName
+          }
+
+          tanzu standalone-cluster version
+
+          if ($LastExitCode -ne 0) {
+            throw "Error verifying tanzu cluster plugin using version command: " + $_.FullName
+          }
+
+          tanzu pinniped-auth version
+
+          if ($LastExitCode -ne 0) {
+            throw "Error verifying tanzu auth plugin using version command: " + $_.FullName
+          }
+
+          tanzu builder version
+
+          if ($LastExitCode -ne 0) {
+            throw "Error verifying tanzu builder plugin using version command: " + $_.FullName
+          }
+
+          tanzu login version
+
+          if ($LastExitCode -ne 0) {
+            throw "Error verifying tanzu login plugin using version command: " + $_.FullName
+          }
