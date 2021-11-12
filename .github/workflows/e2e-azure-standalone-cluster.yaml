@@ -3,7 +3,7 @@ name: E2E Test - Azure Standalone Cluster
 on:
   push:
     branches:
-      - main
+      - check-azure
     paths:
       - "**.go"
       - "cli/cmd/plugin/**/go.mod"
@@ -14,8 +14,6 @@ on:
 
 jobs:
   e2e-azure-standalone-test:
-    # Only run this job if we're in the main repo, not a fork.
-    if: github.repository == 'vmware-tanzu/community-edition'
     name: E2E Azure Standalone Cluster Test
     runs-on: ubuntu-latest
     steps:
