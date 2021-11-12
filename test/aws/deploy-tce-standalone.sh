@@ -35,7 +35,7 @@ echo "Setting CLUSTER_NAME to ${CLUSTER_NAME}..."
 function delete_cluster {
     echo "$@"
     tanzu standalone-cluster delete ${CLUSTER_NAME} -y || {
-        collect_standalone_cluster_diagnostics ${CLUSTER_NAME};
+        collect_standalone_cluster_diagnostics aws ${CLUSTER_NAME};
         kubeconfig_cleanup ${CLUSTER_NAME};
         aws-nuke-tear-down "STANDALONE CLUSTER DELETION FAILED! Deleting the cluster using AWS-NUKE...";
     }
@@ -45,7 +45,7 @@ function create_standalone_cluster {
     echo "Bootstrapping TCE standalone cluster on AWS..."
     tanzu standalone-cluster create "${CLUSTER_NAME}" -f "${TCE_REPO_PATH}"/test/aws/cluster-config.yaml || {
         error "STANDALONE CLUSTER CREATION FAILED!";
-        collect_standalone_cluster_diagnostics ${CLUSTER_NAME};
+        collect_standalone_cluster_diagnostics aws ${CLUSTER_NAME};
         delete_kind_cluster; kubeconfig_cleanup ${CLUSTER_NAME};
         aws-nuke-tear-down "Deleting standalone cluster" "${CLUSTER_NAME}";
         exit 1;
@@ -57,7 +57,7 @@ function create_standalone_cluster {
     }
     kubectl wait --for=condition=ready pod --all --all-namespaces --timeout=300s || {
         error "TIMED OUT WAITING FOR ALL PODS TO BE UP!";
-        collect_standalone_cluster_diagnostics ${CLUSTER_NAME};
+        collect_standalone_cluster_diagnostics aws ${CLUSTER_NAME};
         delete_cluster "Deleting standalone cluster";
         exit 1;
     }
@@ -70,13 +70,13 @@ create_standalone_cluster
 echo "Installing packages on TCE..."
 "${TCE_REPO_PATH}"/test/add-tce-package-repo.sh || {
     error "PACKAGE REPOSITORY INSTALLATION FAILED!";
-    collect_standalone_cluster_diagnostics ${CLUSTER_NAME};
+    collect_standalone_cluster_diagnostics aws ${CLUSTER_NAME};
     delete_cluster "Deleting standalone cluster";
     exit 1;
 }
 tanzu package available list || {
     error "UNEXPECTED FAILURE OCCURRED!";
-    collect_standalone_cluster_diagnostics ${CLUSTER_NAME};
+    collect_standalone_cluster_diagnostics aws ${CLUSTER_NAME};
     delete_cluster "Deleting standalone cluster";
     exit 1;
 }
@@ -85,7 +85,7 @@ tanzu package available list || {
 echo "Starting Gatekeeper test..."
 "${TCE_REPO_PATH}"/test/gatekeeper/e2e-test.sh || {
     error "TEST FAILED!";
-    collect_standalone_cluster_diagnostics ${CLUSTER_NAME};
+    collect_standalone_cluster_diagnostics aws ${CLUSTER_NAME};
     delete_cluster "Deleting standalone cluster";
     exit 1;
 }

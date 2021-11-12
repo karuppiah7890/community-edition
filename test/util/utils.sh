@@ -90,7 +90,7 @@ function collect_management_and_workload_cluster_diagnostics {
     tanzu diagnostics collect --bootstrap-cluster-skip \
         --management-cluster-name "${management_cluster_name}" \
         --workload-cluster-infra "${cluster_infra}" \
-        --workload-cluster-name "${cluster_name}" || {
+        --workload-cluster-name "${workload_cluster_name}" || {
         error "There was an error collecting tanzu diagnostics data. Ignoring the error"
     }    
 }
