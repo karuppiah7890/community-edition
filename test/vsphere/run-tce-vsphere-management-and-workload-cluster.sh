@@ -45,7 +45,22 @@ source "${TCE_REPO_PATH}/test/util/utils.sh"
 source "${TCE_REPO_PATH}/test/vsphere/cleanup-utils.sh"
 
 "${TCE_REPO_PATH}/test/install-dependencies.sh" || { error "Dependency installation failed!"; exit 1; }
-"${TCE_REPO_PATH}/test/build-tce.sh" || { error "TCE installation failed!"; exit 1; }
+# "${TCE_REPO_PATH}/test/build-tce.sh" || { error "TCE installation failed!"; exit 1; }
+
+TCE_VERSION="v0.9.1"
+BUILD_OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+TCE_RELEASE_TAR_BALL="tce-${BUILD_OS}-amd64-${TCE_VERSION}.tar.gz"
+TCE_RELEASE_DIR="tce-${BUILD_OS}-amd64-${TCE_VERSION}"
+INSTALLATION_DIR="${TCE_REPO_PATH}/test/tce-installation"
+mkdir -p "${INSTALLATION_DIR}"
+
+"${TCE_REPO_PATH}/hack/get-tce-release.sh" ${TCE_VERSION} ${BUILD_OS} || { error "TCE installation failed!"; exit 1; }
+
+tar xzvf "${TCE_RELEASE_TAR_BALL}" --directory="${INSTALLATION_DIR}"
+
+"${INSTALLATION_DIR}"/"${TCE_RELEASE_DIR}"/install.sh
+
+rm -rfv "${INSTALLATION_DIR}"
 
 random_id="${RANDOM}"
 
