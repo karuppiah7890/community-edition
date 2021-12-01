@@ -58,6 +58,8 @@ mkdir -p "${INSTALLATION_DIR}"
 
 tar xzvf "${TCE_RELEASE_TAR_BALL}" --directory="${INSTALLATION_DIR}"
 
+"${INSTALLATION_DIR}"/"${TCE_RELEASE_DIR}"/uninstall.sh
+
 "${INSTALLATION_DIR}"/"${TCE_RELEASE_DIR}"/install.sh
 
 rm -rfv "${INSTALLATION_DIR}"
