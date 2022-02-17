@@ -31,8 +31,8 @@ declare -a required_env_vars=("AZURE_CLIENT_ID"
 
 # shellcheck source=test/util/utils.sh
 source "${TCE_REPO_PATH}/test/util/utils.sh"
-# shellcheck source=test/azure/utils.sh
-source "${TCE_REPO_PATH}/test/azure/utils.sh"
+# shellcheck source=test/azure/lib.sh
+source "${TCE_REPO_PATH}/test/azure/lib.sh"
 
 "${TCE_REPO_PATH}/test/install-dependencies.sh" || { error "Dependency installation failed!"; exit 1; }
 "${TCE_REPO_PATH}/test/build-tce.sh" || { error "TCE installation failed!"; exit 1; }
@@ -52,67 +52,6 @@ export VM_IMAGE_PUBLISHER="vmware-inc"
 export VM_IMAGE_BILLING_PLAN_SKU="k8s-1dot21dot2-ubuntu-2004"
 export VM_IMAGE_OFFER="tkg-capi"
 
-function cleanup_standalone_cluster {
-    kubeconfig_cleanup ${CLUSTER_NAME}
-    azure_cluster_cleanup || {
-        error "STANDLONE CLUSTER CLEANUP USING azure CLI FAILED! Please manually delete any ${CLUSTER_NAME} standalone cluster resources using Azure Web UI"
-        return 1
-    }
-}
-
-function delete_cluster_or_cleanup {
-    echo "Deleting standalone cluster"
-    time tanzu standalone-cluster delete ${CLUSTER_NAME} -y || {
-        error "STANDALONE CLUSTER DELETION FAILED!";
-        collect_standalone_cluster_diagnostics azure ${CLUSTER_NAME}
-        delete_kind_cluster
-        cleanup_standalone_cluster
-        return 1
-    }
-}
-
-function create_standalone_cluster {
-    echo "Bootstrapping TCE standalone cluster on Azure..."
-    time tanzu standalone-cluster create "${CLUSTER_NAME}" -f "${TCE_REPO_PATH}/test/azure/cluster-config.yaml" || {
-        error "STANDALONE CLUSTER CREATION FAILED!";
-        return 1;
-    }
-}
-
-function wait_for_pods {
-    kubectl config use-context "${CLUSTER_NAME}"-admin@"${CLUSTER_NAME}" || {
-        error "CONTEXT SWITCH TO STANDALONE CLUSTER FAILED!";
-        return 1;
-    }
-    kubectl wait --for=condition=ready pod --all --all-namespaces --timeout=900s || {
-        error "TIMED OUT WAITING FOR ALL PODS TO BE UP!";
-        return 1;
-    }
-}
-
-function add_package_repo {
-    echo "Installing package repository on TCE..."
-    "${TCE_REPO_PATH}/test/add-tce-package-repo.sh" || {
-        error "PACKAGE REPOSITORY INSTALLATION FAILED!";
-        return 1;
-    }
-}
-
-function list_packages {
-    tanzu package available list || {
-        error "LISTING PACKAGES FAILED";
-        return 1;
-    }
-}
-
-function test_gate_keeper_package {
-    echo "Starting Gatekeeper test..."
-    "${TCE_REPO_PATH}/test/gatekeeper/e2e-test.sh" || {
-        error "GATEKEEPER PACKAGE TEST FAILED!";
-        return 1;
-    }
-}
-
 accept_vm_image_terms || exit 1
 
 create_standalone_cluster || {
@@ -124,27 +63,27 @@ create_standalone_cluster || {
 
 wait_for_pods || {
     collect_standalone_cluster_diagnostics azure ${CLUSTER_NAME}
-    delete_cluster_or_cleanup
+    delete_standalone_cluster_or_cleanup
     exit 1
 }
 
 add_package_repo || {
     collect_standalone_cluster_diagnostics azure ${CLUSTER_NAME}
-    delete_cluster_or_cleanup
+    delete_standalone_cluster_or_cleanup
     exit 1
 }
 
 list_packages || {
     collect_standalone_cluster_diagnostics azure ${CLUSTER_NAME}
-    delete_cluster_or_cleanup
+    delete_standalone_cluster_or_cleanup
     exit 1
 }
 
 test_gate_keeper_package || {
     collect_standalone_cluster_diagnostics azure ${CLUSTER_NAME}
-    delete_cluster_or_cleanup
+    delete_standalone_cluster_or_cleanup
     exit 1
 }
 
 echo "Cleaning up..."
-delete_cluster_or_cleanup
+delete_standalone_cluster_or_cleanup
