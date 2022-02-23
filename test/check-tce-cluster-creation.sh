@@ -3,8 +3,10 @@
 # Copyright 2021 VMware Tanzu Community Edition contributors. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-set -e
-set -x
+set -o errexit
+set -o xtrace
+set -o pipefail
+set -o nounset
 
 TCE_REPO_PATH="$(git rev-parse --show-toplevel)"
 

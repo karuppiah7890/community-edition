@@ -402,6 +402,9 @@ makefile:
 
 ##### BUILD TARGETS #####
 
+unmanaged-cluster-e2e-test:
+	test/unmanaged-cluster/e2e-test.sh
+
 # AWS Management + Workload Cluster E2E Test
 aws-management-and-workload-cluster-e2e-test:
 	test/aws/deploy-tce-managed.sh
