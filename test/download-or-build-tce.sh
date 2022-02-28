@@ -22,7 +22,7 @@ if [[ -z "${BUILD_VERSION}" ]]; then
 fi
 
 # Check for nightly build
-TODAY=$(date +%F)
+TODAY="2022-02-22"
 DOWNLOAD_GCP_URI="https://storage.googleapis.com/tce-cli-plugins-staging/build-daily/${TODAY}/tce-linux-amd64-${BUILD_VERSION}.tar.gz"
 if [[ $BUILD_OS == "Darwin" ]]; then
     if [[ "$BUILD_ARCH" == "x86_64" ]]; then

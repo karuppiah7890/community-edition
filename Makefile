@@ -481,4 +481,7 @@ docker-management-and-cluster-e2e-test:
 vsphere-management-and-workload-cluster-e2e-test:
 	BUILD_VERSION=$(BUILD_VERSION) test/vsphere/run-tce-vsphere-management-and-workload-cluster.sh
 
+azure-standalone-cluster-e2e-test:
+	test/azure/deploy-standalone-cluster.sh
+
 ##### E2E TESTS #####
