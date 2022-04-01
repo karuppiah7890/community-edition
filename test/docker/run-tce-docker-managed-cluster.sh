@@ -40,19 +40,9 @@ tanzu cluster kubeconfig get ${GUEST_CLUSTER_NAME} --admin
 # wait for packages to be available
 sleep 10
 
-tanzu package available list
-
-tanzu package available list fluent-bit.community.tanzu.vmware.com
-
-fluentbit_version=$(tanzu package available list fluent-bit.community.tanzu.vmware.com -o json | jq -r '.[0].version | select(. !=null)')
-
-tanzu package install fluent-bit --package-name fluent-bit.community.tanzu.vmware.com --version "${fluentbit_version}"
-
-tanzu package installed list
-
-kubectl -n fluent-bit get all
-
-kubectl get installedpackage,apps --all-namespaces
+# Run e2e test
+echo "Starting Gatekeeper test..."
+"${TCE_REPO_PATH}"/test/gatekeeper/e2e-test.sh
 
 tanzu cluster delete ${GUEST_CLUSTER_NAME} --yes
 
